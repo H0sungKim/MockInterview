@@ -5,6 +5,9 @@
 ## User settings
 xcuserdata/
 
+.DS_Store
+GoogleService-Info.plist
+
 ## Obj-C/Swift specific
 *.hmap
 
