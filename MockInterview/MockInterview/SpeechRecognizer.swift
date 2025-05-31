@@ -8,19 +8,18 @@
 import Foundation
 import AVFoundation
 import Speech
+import Combine
 
-actor SpeechRecognizer: ObservableObject {
+actor SpeechRecognizer {
     
-    static let shared = SpeechRecognizer()
-    
-    @MainActor @Published var transcript: String = ""
+    @MainActor var transcript: CurrentValueSubject<String, Never> = .init("")
     private let recognizer = SFSpeechRecognizer(locale: Locale(identifier: "en_US"))
     private var request: SFSpeechAudioBufferRecognitionRequest?
     private var recognitionTask: SFSpeechRecognitionTask?
     private let audioEngine = AVAudioEngine()
     private var isRecording = false
     
-    private init() {
+    init() {
         Task {
             await requestAuthorization()
         }
@@ -53,7 +52,7 @@ actor SpeechRecognizer: ObservableObject {
         
         let audioSession = AVAudioSession.sharedInstance()
         do {
-            try audioSession.setCategory(.record, mode: .measurement, options: .duckOthers)
+            try audioSession.setCategory(.playAndRecord, mode: .measurement, options: .duckOthers)
             try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
         } catch {
             throw error
@@ -75,18 +74,23 @@ actor SpeechRecognizer: ObservableObject {
         self.recognitionTask = recognizer.recognitionTask(
             with: request
         ) { [weak self] result, error in
-            guard let self else { return }
             if let result {
                 let transcription = result.bestTranscription.formattedString
                 Task { @MainActor in
-                    self.transcript = transcription
-                    print(self.transcript)
+                    await self?.transcript.send(transcription)
                 }
             }
         }
     }
     
     func stopTranscribe() {
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback, options: .mixWithOthers)
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch let error as NSError {
+            print("Error : \(error), \(error.userInfo)")
+        }
+        
         audioEngine.stop()
         audioEngine.inputNode.removeTap(onBus: 0)
         

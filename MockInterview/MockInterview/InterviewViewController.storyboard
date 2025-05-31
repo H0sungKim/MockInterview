@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
+        <capability name="Image references" minToolsVersion="12.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Interview View Controller-->
+        <scene sceneID="s0d-6b-0kx">
+            <objects>
+                <viewController storyboardIdentifier="InterviewViewController" id="Y6W-OH-hqX" customClass="InterviewViewController" customModule="MockInterview" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FkN-BQ-MyC">
+                                <rect key="frame" x="164.66666666666666" y="690" width="64" height="64"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="64" id="Pkl-k6-0oE"/>
+                                    <constraint firstAttribute="width" constant="64" id="aQ8-TE-NLr"/>
+                                </constraints>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain">
+                                    <imageReference key="image" image="microphone" catalog="system" symbolScale="large"/>
+                                    <preferredSymbolConfiguration key="preferredSymbolConfigurationForImage"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <action selector="touchDownMic:" destination="Y6W-OH-hqX" eventType="touchDown" id="Eg1-Uq-K4s"/>
+                                    <action selector="touchUpMic:" destination="Y6W-OH-hqX" eventType="touchUpOutside" id="G37-HU-iig"/>
+                                    <action selector="touchUpMic:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="T2L-sG-Ycz"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gkk-jn-22g">
+                                <rect key="frame" x="16" y="426" width="361" height="0.0"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="center" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BE4-iF-8wg">
+                                <rect key="frame" x="16" y="91" width="361" height="303"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <color key="textColor" systemColor="labelColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="BE4-iF-8wg" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="16" id="20w-rz-nYv"/>
+                            <constraint firstItem="BE4-iF-8wg" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" constant="32" id="3RM-rq-K73"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="bottom" secondItem="FkN-BQ-MyC" secondAttribute="bottom" constant="64" id="4Xb-RN-pJQ"/>
+                            <constraint firstItem="Gkk-jn-22g" firstAttribute="top" secondItem="BE4-iF-8wg" secondAttribute="bottom" constant="32" id="A1X-ro-OcD"/>
+                            <constraint firstItem="Gkk-jn-22g" firstAttribute="centerY" secondItem="5EZ-qb-Rvc" secondAttribute="centerY" id="BIf-ZD-nyP"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="BE4-iF-8wg" secondAttribute="trailing" constant="16" id="I9D-Fg-ut1"/>
+                            <constraint firstItem="FkN-BQ-MyC" firstAttribute="centerX" secondItem="5EZ-qb-Rvc" secondAttribute="centerX" id="hdT-sK-IqD"/>
+                            <constraint firstItem="Gkk-jn-22g" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="16" id="iPp-8C-Zsu"/>
+                            <constraint firstItem="Gkk-jn-22g" firstAttribute="centerX" secondItem="5EZ-qb-Rvc" secondAttribute="centerX" id="j04-K8-xlD"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="Gkk-jn-22g" secondAttribute="trailing" constant="16" id="tp8-Hg-GC3"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="systemText" destination="BE4-iF-8wg" id="Yd6-5d-h7X"/>
+                        <outlet property="userTranscript" destination="Gkk-jn-22g" id="4SO-4q-CZX"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="40" y="-2"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="microphone" catalog="system" width="110" height="128"/>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

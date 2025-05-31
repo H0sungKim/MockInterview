@@ -21,6 +21,8 @@ class ConversationViewModel: ObservableObject {
     /// This array holds both the user's and the system's chat messages
     @Published var messages = [ChatMessage]()
     
+    @Published var systemMessage: String = ""
+    
     /// Indicates we're waiting for the model to finish
     @Published var busy = false
     
@@ -35,9 +37,21 @@ class ConversationViewModel: ObservableObject {
     
     private var chatTask: Task<Void, Never>?
     
-    init() {
+    
+    init(job: String, style: Int) {
         model = VertexAI.vertexAI().generativeModel(modelName: "gemini-2.0-flash-001")
-        chat = model.startChat()
+//        chat = model.startChat()
+        chat = model.startChat(history: [
+            ModelContent(role: "user", parts: """
+                You are a human interviewer hiring \(job).
+                Conduct a realistic mock interview by asking one question at a time, based on the candidate's answers.
+                Wait for my answer and then provide brief, natural feedback on my response just as a real interviewer would.
+                Maintain a. onversational tone with a level of formality around \(style), where 0 is very stiff/formal and 10 is casual/friendly.
+                Act as a professional human interviewer, not a chatbot.
+                If a stiff interview is rated 0 and a relaxed interview is rated 10, please make it around a \(style).
+                Please start as soon as I tell you "I'm ready".
+            """),
+        ])
     }
     
     func sendMessage(_ text: String, streaming: Bool = true) async {
@@ -63,6 +77,7 @@ class ConversationViewModel: ObservableObject {
     
     private func internalSendMessageStreaming(_ text: String) async {
         chatTask?.cancel()
+        systemMessage = ""
         
         chatTask = Task {
             busy = true
@@ -84,6 +99,7 @@ class ConversationViewModel: ObservableObject {
                     messages[messages.count - 1].pending = false
                     if let text = chunk.text {
                         messages[messages.count - 1].message += text
+                        self.systemMessage += text
                     }
                 }
             } catch {
@@ -120,6 +136,44 @@ class ConversationViewModel: ObservableObject {
                     messages[messages.count - 1].message = responseText
                     messages[messages.count - 1].pending = false
                 }
+            } catch {
+                self.error = error
+                print(error.localizedDescription)
+                messages.removeLast()
+            }
+        }
+    }
+    
+    func sendPDF(text: String, pdfURL: URL) async {
+        chatTask?.cancel()
+        
+        chatTask = Task {
+            busy = true
+            defer {
+                busy = false
+            }
+            
+            // first, add the user's message to the chat
+            let userMessage = ChatMessage(message: text, participant: .user)
+            messages.append(userMessage)
+            
+            // add a pending message while we're waiting for a response from the backend
+            let systemMessage = ChatMessage.pending(participant: .system)
+            messages.append(systemMessage)
+            
+            do {
+                // Provide the PDF as `Data` with the appropriate MIME type
+                let pdf = try InlineDataPart(data: Data(contentsOf: pdfURL), mimeType: "application/pdf")
+
+                
+
+                // To generate text output, call `generateContent` with the PDF file and text prompt
+                let response: GenerateContentResponse = try await model.generateContent(pdf, text)
+                // Print the generated text, handling the case where it might be nil
+                print(response.text ?? "No text in response.")
+                
+                messages[messages.count - 1].message = response.text ?? ""
+                messages[messages.count - 1].pending = false
             } catch {
                 self.error = error
                 print(error.localizedDescription)
