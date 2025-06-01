@@ -42,13 +42,18 @@ class InterviewViewController: UIViewController {
         })
         .store(in: &cancellable)
         
-        
+        Task {
+            await conversationViewModel.sendPDF(text: """
+                This is my portfolio. Summarize this to a text so that you can remember.
+            """, pdfURL: pdfURL)
+        }
         // Do any additional setup after loading the view.
     }
     
-    func configure(style: Int, job: String) {
+    func configure(style: Int, job: String, pdfURL: URL) {
         self.style = style
         self.job = job
+        self.pdfURL = pdfURL
         conversationViewModel = ConversationViewModel(job: job, style: style)
     }
 

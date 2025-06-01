@@ -28,7 +28,7 @@ class SettingViewController: UIViewController {
     
     @IBAction func onClickEnter(_ sender: Any) {
         let viewController: InterviewViewController = InterviewViewController.create()
-        viewController.configure(style: Int(styleSlider.value), job: jobTextField.text ?? "")
+        viewController.configure(style: Int(styleSlider.value), job: jobTextField.text ?? "", pdfURL: url!)
         navigationController?.pushViewController(viewController, animated: true)
     }
     

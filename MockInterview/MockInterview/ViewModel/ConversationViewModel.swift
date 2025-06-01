@@ -48,7 +48,6 @@ class ConversationViewModel: ObservableObject {
                 Wait for my answer and then provide brief, natural feedback on my response just as a real interviewer would.
                 Maintain a. onversational tone with a level of formality around \(style), where 0 is very stiff/formal and 10 is casual/friendly.
                 Act as a professional human interviewer, not a chatbot.
-                If a stiff interview is rated 0 and a relaxed interview is rated 10, please make it around a \(style).
                 Please start as soon as I tell you "I'm ready".
             """),
         ])
@@ -169,6 +168,11 @@ class ConversationViewModel: ObservableObject {
 
                 // To generate text output, call `generateContent` with the PDF file and text prompt
                 let response: GenerateContentResponse = try await model.generateContent(pdf, text)
+                chat.history.append(ModelContent(parts: """
+                    This is my portfolio.
+                    Please remember and ask questions that are relevant to this when conducting the mock interview.
+                    \(response.text ?? "")
+                """))
                 // Print the generated text, handling the case where it might be nil
                 print(response.text ?? "No text in response.")
                 
